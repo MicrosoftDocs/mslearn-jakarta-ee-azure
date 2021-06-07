@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # In order to use the variables in CLI scripts
 # https://access.redhat.com/solutions/321513
