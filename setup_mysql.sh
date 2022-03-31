@@ -144,7 +144,8 @@ function CreateFlexibleMySQLInstance() {
       -g $MYSQL_RES_GRP_NAME \
       -n $MYSQL_SERVER_NAME \
       -r AllowAllAzureIPs \
-      --start-ip-address 0.0.0.0 
+      --start-ip-address 0.0.0.0 \
+      --end-ip-address 255.255.255.255
   echo "Added Firewall Rule for Azure Address"
 }
 
