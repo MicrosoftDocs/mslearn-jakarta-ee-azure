@@ -135,7 +135,7 @@ function CreateFlexibleMySQLInstance() {
       --admin-user $MYSQL_USER \
       --admin-password $MYSQL_PASSWORD \
       --sku-name Standard_B1ms \
-      --public-access 0.0.0.0-255.255.255.255 \
+      --public-access $PUBLIC_IP  \
       --storage-size 32 \
       --version 5.7
   echo "Created MySQL Server as " $MYSQL_SERVER_NAME
