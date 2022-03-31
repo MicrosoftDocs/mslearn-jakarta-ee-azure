@@ -42,21 +42,6 @@
       <artifactId>mysql-connector-java</artifactId>
       <version>${mysql-jdbc-driver}</version>
     </dependency>
-    <dependency>
-      <groupId>io.swagger.core.v3</groupId>
-      <artifactId>swagger-jaxrs2</artifactId>
-      <version>2.1.5</version>
-    </dependency>
-    <dependency>
-      <groupId>io.swagger.core.v3</groupId>
-      <artifactId>swagger-jaxrs2-servlet-initializer</artifactId>
-      <version>2.1.5</version>
-    </dependency>
-    <dependency>
-      <groupId>org.microprofile-ext.openapi-ext</groupId>
-      <artifactId>openapi-ui</artifactId>
-      <version>1.1.4</version>
-    </dependency>
   </dependencies>
   <build>
     <finalName>ROOT</finalName>
