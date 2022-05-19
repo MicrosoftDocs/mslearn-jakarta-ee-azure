@@ -68,7 +68,7 @@ export MYSQL_RES_GRP_NAME='MySQL-RG-'$RESOURCE_GRP_NAME_DATE
 export MYSQL_SERVER_NAME='mysqlserver-'$RANDOM_SERVER_NAME
 export MYSQL_USER='azureuser'
 MYSQL_PASSWORD='!'$(cat /dev/urandom | base64 | tr -dc [:alpha:]| fold -w 8 | head -n 1)$RANDOM
-export PUBLIC_IP=$(curl ifconfig.io)
+export PUBLIC_IP=$(curl ifconfig.io -4)
 
 #########################################################
 # For DEBUG
