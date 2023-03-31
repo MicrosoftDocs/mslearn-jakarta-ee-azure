@@ -1,4 +1,4 @@
-name: Build and deploy JAR app to Azure Web App
+name: Build and deploy WAR app to Azure Web App
 
 on:
   workflow_dispatch:
