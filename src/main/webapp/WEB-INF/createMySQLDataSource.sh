@@ -1,9 +1,7 @@
-#!/usr/bin/bash
-
+#!/bin/bash
 # In order to use the variables in CLI scripts
 # https://access.redhat.com/solutions/321513
 sed -i -e "s|.*<resolve-parameter-values.*|<resolve-parameter-values>true</resolve-parameter-values>|g" /opt/eap/bin/jboss-cli.xml
-
 /opt/eap/bin/jboss-cli.sh --connect <<EOF
 data-source add --name=JPAWorldDataSourceDS \
 --jndi-name=java:jboss/datasources/JPAWorldDataSource \
@@ -20,6 +18,5 @@ data-source add --name=JPAWorldDataSourceDS \
 --use-java-context=true \
 --valid-connection-checker-class-name=org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLValidConnectionChecker \
 --exception-sorter-class-name=com.mysql.cj.jdbc.integration.jboss.ExtendedMysqlExceptionSorter
-reload --use-current-server-config=true
 exit
 EOF

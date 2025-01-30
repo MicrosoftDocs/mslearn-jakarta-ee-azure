@@ -62,13 +62,14 @@ fi
 RESOURCE_GRP_NAME_DATE=$(date '+%Y%m%d%T' |tr -d :)
 
 ### Following is the correct version. It create the severname with lower case
-RANDOM_SERVER_NAME=$(cat /dev/urandom | base64 | tr -dc [:alpha:]|tr [:upper:] [:lower:] | fold -w 10 | head -n 1)
+### https://askubuntu.com/questions/192203/how-to-use-dev-urandom
+RANDOM_SERVER_NAME=$(head -c 12 /dev/urandom | base64 | tr -dc '[:alpha:]'|tr '[:upper:]' '[:lower:]' | fold -w 10 | head -n 1)
 
 export MYSQL_RES_GRP_NAME='MySQL-RG-'$RESOURCE_GRP_NAME_DATE
 export MYSQL_SERVER_NAME='mysqlserver-'$RANDOM_SERVER_NAME
 export MYSQL_USER='azureuser'
-MYSQL_PASSWORD='!'$(cat /dev/urandom | base64 | tr -dc [:alpha:]| fold -w 8 | head -n 1)$RANDOM
-export PUBLIC_IP=$(curl ifconfig.io)
+MYSQL_PASSWORD='!'$(head -c 12 /dev/urandom | base64 | tr -dc '[:alpha:]'| fold -w 8 | head -n 1)$RANDOM
+export PUBLIC_IP=$(curl ifconfig.io -4)
 
 #########################################################
 # For DEBUG
@@ -135,7 +136,7 @@ function CreateFlexibleMySQLInstance() {
       --admin-user $MYSQL_USER \
       --admin-password $MYSQL_PASSWORD \
       --sku-name Standard_B1ms \
-      --public-access $PUBLIC_IP \
+      --public-access $PUBLIC_IP  \
       --storage-size 32 \
       --version 5.7
   echo "Created MySQL Server as " $MYSQL_SERVER_NAME
@@ -144,7 +145,8 @@ function CreateFlexibleMySQLInstance() {
       -g $MYSQL_RES_GRP_NAME \
       -n $MYSQL_SERVER_NAME \
       -r AllowAllAzureIPs \
-      --start-ip-address 0.0.0.0 
+      --start-ip-address 0.0.0.0 \
+      --end-ip-address 255.255.255.255
   echo "Added Firewall Rule for Azure Address"
 }
 
