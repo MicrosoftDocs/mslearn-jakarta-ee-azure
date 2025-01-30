@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.microsoft.azure.samples</groupId>
-  <artifactId>jakartaee-app-on-jboss</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>war</packaging>
-  <properties>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
-    <failOnMissingWebXml>false</failOnMissingWebXml>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <jakarta.jakartaee-api.version>8.0.0</jakarta.jakartaee-api.version>
-    <junit-jupiter.version>5.5.0</junit-jupiter.version>
-    <mockito-core.version>3.1.0</mockito-core.version>
-    <mysql-jdbc-driver>8.0.29</mysql-jdbc-driver>
-    <openapi-ui>1.1.4</openapi-ui>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.microsoft.azure.samples</groupId>
+	<artifactId>jakartaee-app-on-jboss</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+
+	<name>jakartaee-app-on-jboss</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.report.sourceEncoding>UTF-8</project.report.sourceEncoding>
+		<maven.compiler.release>17</maven.compiler.release>
+		<jakartaee-api.version>10.0.0</jakartaee-api.version>
+		<compiler-plugin.version>3.13.0</compiler-plugin.version>
+		<war-plugin.version>3.4.0</war-plugin.version>
+
+    	<junit-jupiter.version>5.11.4</junit-jupiter.version>
+    	<mockito-core.version>5.15.2</mockito-core.version>
+    	<mysql-jdbc-driver>9.2.0</mysql-jdbc-driver>
+    	<openapi-ui>1.1.4</openapi-ui>
   </properties>
   <dependencies>
-    <dependency>
-      <groupId>jakarta.platform</groupId>
-      <artifactId>jakarta.jakartaee-api</artifactId>
-      <version>${jakarta.jakartaee-api.version}</version>
-      <scope>provided</scope>
-    </dependency>
+		<dependency>
+			<groupId>jakarta.platform</groupId>
+			<artifactId>jakarta.jakartaee-api</artifactId>
+			<version>${jakartaee-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
@@ -38,19 +41,26 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
       <version>${mysql-jdbc-driver}</version>
     </dependency>
   </dependencies>
   <build>
     <finalName>ROOT</finalName>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.3.2</version>
-      </plugin>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>${compiler-plugin.version}</version>
+		</plugin>
+		<plugin>
+			<artifactId>maven-war-plugin</artifactId>
+			<version>${war-plugin.version}</version>
+			<configuration>
+				<failOnMissingWebXml>false</failOnMissingWebXml>
+			</configuration>
+		</plugin>
     </plugins>
   </build>
 </project>

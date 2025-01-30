@@ -1,5 +1,7 @@
 #!/bin/bash
 set -e
+
+az configure --defaults location=eastus2
 #########################################################
 # This script create the Azure Database for MySQL.
 # After completed success, you can see like following result
@@ -29,24 +31,34 @@ set -e
 #########################################################
 
 #########################################################
+# NOTE: If you encounter the following error message when executing the command, it means that the resource provider is not registered in your environment. 
+#
+# Code: MissingSubscriptionRegistration
+# Message: The subscription is not registered to use namespace 'Microsoft.DBforMySQL'. See https://aka.ms/rps-not-found for how to register subscriptions.
+#
+# In that case, please run the following command to register the MySQL resource provider.
+# 
+# > az provider register --namespace 'Microsoft.DBforMySQL'
+# 
+#########################################################
+
+#########################################################
 # Argument Check
 #########################################################
 
 MYSQL_INSTANCE_SELECT=""
 if [ -z "${1:-}" ]; then
-    echo "Usage: ${0##*/} [generic/flexible]" >&2
+    echo "Usage: ${0##*/} [flexible]" >&2
     exit 1
 fi
 ARGUMENT=$1
 echo "ARGUMENT:"$ARGUMENT;
 
-if [ "$ARGUMENT" = "generic" ]; then 
-  MYSQL_INSTANCE_SELECT="generic"
-elif [ "$ARGUMENT" = "flexible" ]; then
+if [ "$ARGUMENT" = "flexible" ]; then
   MYSQL_INSTANCE_SELECT="flexible"
 else
   echo "Invalid Argument" 1>&2
-  echo "$0 [generic/flexible]" 1>&2
+  echo "$0 [flexible]" 1>&2
   exit 1
 fi
 
@@ -94,37 +106,6 @@ function error_handler() {
 trap 'error_handler $? $LINENO' ERR
 
 #########################################################
-# Function Create Generic MySQL Instance
-#########################################################
-
-function CreateGeneriMySQLInstance() {
-  echo "Creating MySQL Server"
-  az mysql server create \
-      --name $MYSQL_SERVER_NAME \
-      --resource-group $MYSQL_RES_GRP_NAME \
-      --admin-user $MYSQL_USER \
-      --admin-password $MYSQL_PASSWORD \
-      --sku-name GP_Gen5_2
-  echo "Created MySQL Server as " $MYSQL_SERVER_NAME
-  echo "Adding Firewall Rule for your Local IP Address" 
-  az mysql server firewall-rule create \
-      -g $MYSQL_RES_GRP_NAME \
-      -s $MYSQL_SERVER_NAME \
-      -n allowip_fromclient \
-      --start-ip-address $PUBLIC_IP \
-      --end-ip-address $PUBLIC_IP
-  echo "Added Firewall Rule for your Local IP Address as" $PUBLIC_IP 
-  echo "Adding Firewall Rule for Azure Address"
-  az mysql server firewall-rule create \
-      -g $MYSQL_RES_GRP_NAME \
-      -s $MYSQL_SERVER_NAME \
-      -n AllowAllAzureIPs \
-      --start-ip-address 0.0.0.0 \
-      --end-ip-address 255.255.255.255
-  echo "Added Firewall Rule for Azure Address"
-}
-
-#########################################################
 # Function Create Flexible Server MySQL Instance
 #########################################################
 
@@ -136,9 +117,12 @@ function CreateFlexibleMySQLInstance() {
       --admin-user $MYSQL_USER \
       --admin-password $MYSQL_PASSWORD \
       --sku-name Standard_B1ms \
+      --tier Burstable \
       --public-access $PUBLIC_IP  \
       --storage-size 32 \
-      --version 5.7
+      --storage-auto-grow Enabled \
+      --iops 500 \
+      --version 8.0.21
   echo "Created MySQL Server as " $MYSQL_SERVER_NAME
   echo "Adding Firewall Rule for Azure Address"
   az mysql flexible-server firewall-rule create \
@@ -162,9 +146,7 @@ echo "Created Resource Group as " $MYSQL_RES_GRP_NAME
 # Create MySQL on Azure Resource Group
 #########################################################
 
-if [ "$MYSQL_INSTANCE_SELECT" = "generic" ]; then 
-  CreateGeneriMySQLInstance
-else
+if [ "$MYSQL_INSTANCE_SELECT" = "flexible" ]; then 
   CreateFlexibleMySQLInstance
 fi
 

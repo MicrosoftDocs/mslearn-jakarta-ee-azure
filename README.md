@@ -1,17 +1,16 @@
-# Build and deploy Java EE(Jakarta EE) Application to JBoss EAP on Azure  App Service
+# Build and deploy Jakarta EE Application to JBoss EAP on Azure  App Service
 
-In this sample, you can learn how to deploy a Java EE(Jakarta EE) Application to JBoss EAP on Azure App Service.  
-This is a general Java EE (Jakarta EE) application. In the project, we used following technologies of Java EE.
+In this sample, you can learn how to deploy a Jakarta EE 10 Application to JBoss EAP on Azure App Service.  
+This is a general Jakarta EE application. In the project, we used following technologies of Jakarta EE 10.
 
-* `JAX-RS (JavaTM API for RESTful Web Services)` 
+* `JAX-RS (JavaTM API for RESTful Web Services)`
 * `JPA (JavaTM Persistence API)`
 * `CDI`
 * `JSON-B (JavaTM API for JSON Binding)`
 
+## Prerequire for this Module
 
-### Prerequire for this Module
-
-* Java SE 8 (or 11)
+* Java SE 17
 * Azure CLI command
 * Azure Subscription
 * git command
@@ -19,7 +18,6 @@ This is a general Java EE (Jakarta EE) application. In the project, we used foll
 * MySQL client command
 * jq command
 * Bash
-
 
 ## List of all source code
 
@@ -64,14 +62,13 @@ After you clone the project, you will see like following files and directories.
 └── world.sql
 ```
 
-
 ## Overview of the code
 
-In this project, we will access to MySQL DB from Jakarta EE 8 Application.
+In this project, we will access to MySQL DB from Jakarta EE 10 Application.
 To connect to the MySQL from Java, you need implement and configure the project with following procedure.
 
-1. Create and Configure as a Jakarta EE 8 Project
-2. Add dependency for MySQL JDBC driver 
+1. Create and Configure as a Jakarta EE 10 Project
+2. Add dependency for MySQL JDBC driver
 3. Create a DataSource with JNDI on your Application Server
 4. Create a persisteence unit config for JPA on persistence.xml
 5. Inject EntityManager Instance
@@ -80,12 +77,12 @@ To connect to the MySQL from Java, you need implement and configure the project 
 8. Implement JAX-RS Endpoint
 9. Access to the RESTful Endpoint
 
-### 1. Create and Configure as a Jakarta EE 8 Project
+### 1. Create and Configure as a Jakarta EE 10 Project
 
-In this project, we created Jakarta EE 8 projects. In order to create the Jakarta EE 8 project, we need specify following dependencies on [pom.xml](pom.xml).
+In this project, we created Jakarta EE 10 projects. In order to create the Jakarta EE 10 project, we need specify following dependencies on [pom.xml](pom.xml).
 
 ```xml
-    <jakarta.jakartaee-api.version>8.0.0</jakarta.jakartaee-api.version>
+    <jakarta.jakartaee-api.version>10.0.0</jakarta.jakartaee-api.version>
     ....
     <dependency>
       <groupId>jakarta.platform</groupId>
@@ -95,16 +92,16 @@ In this project, we created Jakarta EE 8 projects. In order to create the Jakart
     </dependency>
 ```
 
-### 2. Add dependency for MySQL JDBC driver 
+### 2. Add dependency for MySQL JDBC driver
 
 we added a dependency for MySQL JDBC driver as follows on `pom.xml`. If MySQL provide a new version of the JDBC driver, please change the version number.
 
 ```xml
-    <mysql-jdbc-driver>8.0.22</mysql-jdbc-driver>
+    <mysql-jdbc-driver>9.2.0</mysql-jdbc-driver>
 
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
       <version>${mysql-jdbc-driver}</version>
     </dependency>
 ```
@@ -148,12 +145,13 @@ After created the DataSource, you need create persistence unit config on [persis
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+<persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
   <persistence-unit name="JPAWorldDatasourcePU" transaction-type="JTA">
     <jta-data-source>java:jboss/datasources/JPAWorldDataSource</jta-data-source>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="hibernate.generate_statistics" value="true" />
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
     </properties>
   </persistence-unit>
 </persistence>
@@ -237,10 +235,9 @@ public class City implements Serializable {
 }
 ```
 
-
 ### 7. Configure for working with JAX-RS and JSON-B in JBoss EAP
 
-We will implement the standard Jakarta EE 8 API only, so in order to use the JSON-B with JAX-RS. we need configure the following parameter in [web.xml](src/main/webapp/WEB-INF/web.xml) for JBoss EAP App.
+We will implement the standard Jakarta EE 10 API only, so in order to use the JSON-B with JAX-RS. we need configure the following parameter in [web.xml](src/main/webapp/WEB-INF/web.xml) for JBoss EAP App.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -255,7 +252,7 @@ We will implement the standard Jakarta EE 8 API only, so in order to use the JSO
 If you didn't configure the above, you may see like following error.  
 [Stack Overflow : (De)Serializing JSON on Thorntails Use JSON-B Instead of Jackson](https://stackoverflow.com/questions/61483229/deserializing-json-on-thorntails-use-json-b-instead-of-jackson).
 
-```
+```log
 2020-04-28 10:19:37,235 WARN  [org.jboss.as.jaxrs] (MSC service thread 1-6) 
 WFLYRS0018: Explicit usage of Jackson annotation in a JAX-RS deployment; the
  system will disable JSON-B processing for the current deployment. Consider 
