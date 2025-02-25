@@ -45,6 +45,11 @@
       <artifactId>mysql-connector-j</artifactId>
       <version>${mysql-jdbc-driver}</version>
     </dependency>
+    <dependency>
+        <groupId>com.azure</groupId>
+        <artifactId>azure-identity-extensions</artifactId>
+        <version>1.2.0</version>
+    </dependency>
   </dependencies>
   <build>
     <finalName>ROOT</finalName>
