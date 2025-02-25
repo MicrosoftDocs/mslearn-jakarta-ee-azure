@@ -161,6 +161,7 @@ function CreateUserManagedIdentity() {
   # Only a user with at least the Privileged Role Administrator role can grant these permissions.
   echo "Granting the User.Read.All, GroupMember.Read.All, and Application.Read.All permissions to the user managed identity"
   uri=https://graph.microsoft.com/v1.0/servicePrincipals/$AZ_IDENTITY_PRINCIPAL_ID/appRoleAssignments
+  sleep 10
   graphResourceId=$(az ad sp list --display-name "Microsoft Graph" \
                      --query "[0].id" --out tsv)
   userReadAll=$(az ad sp list --display-name "Microsoft Graph" \
@@ -245,7 +246,7 @@ yellowEcho  "[INFO] mysql -h $MYSQL_SERVER_NAME.mysql.database.azure.com --user 
 yellowEcho  "[INFO]"
 yellowEcho  "[INFO] Or you can use the following Azure CLI command"
 yellowEcho  "[INFO]"
-yellowEcho  "[INFO] az mysql flexible-server connect -g $RES_GRP_NAME -n $MYSQL_SERVER_NAME -u $MYSQL_USER -p '$MYSQL_PASSWORD' -d newdatabase --interactive"
+yellowEcho  "[INFO] az mysql flexible-server connect -n $MYSQL_SERVER_NAME -u $MYSQL_USER -p '$MYSQL_PASSWORD' --interactive"
 yellowEcho  "[INFO] Password: [$MYSQL_PASSWORD]"
 yellowEcho  "[INFO] "
 yellowEcho  "[INFO] "
