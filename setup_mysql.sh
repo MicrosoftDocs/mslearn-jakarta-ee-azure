@@ -112,6 +112,7 @@ trap 'error_handler $? $LINENO' ERR
 #########################################################
 
 function CreateFlexibleMySQLInstance() {
+  az provider register --namespace 'Microsoft.DBforMySQL'
   echo "Creating MySQL Server"
   az mysql flexible-server create \
       --resource-group $RES_GRP_NAME \
@@ -246,7 +247,7 @@ yellowEcho  "[INFO] mysql -h $MYSQL_SERVER_NAME.mysql.database.azure.com --user 
 yellowEcho  "[INFO]"
 yellowEcho  "[INFO] Or you can use the following Azure CLI command"
 yellowEcho  "[INFO]"
-yellowEcho  "[INFO] az mysql flexible-server connect -n $MYSQL_SERVER_NAME -u $MYSQL_USER -p '$MYSQL_PASSWORD' --interactive"
+yellowEcho  "[INFO] az mysql flexible-server connect -n $MYSQL_SERVER_NAME -u $MYSQL_USER --interactive"
 yellowEcho  "[INFO] Password: [$MYSQL_PASSWORD]"
 yellowEcho  "[INFO] "
 yellowEcho  "[INFO] "
